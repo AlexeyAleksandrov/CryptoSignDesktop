@@ -113,6 +113,7 @@ void MainWindow::setFileStatus(int i, fileStatus status)
     if(itemFile == nullptr || itemStatus == nullptr)
     {
         qDebug() << "Невозможно установить статус файлу " << i;
+        QApplication::processEvents();
         return;
     }
 
@@ -153,6 +154,10 @@ void MainWindow::setFileStatus(int i, fileStatus status)
     itemFile->setBackground(color);
     itemStatus->setBackground(color);
     itemStatus->setText(text);
+
+    QApplication::processEvents();
+    QApplication::processEvents();
+    QApplication::processEvents();
 }
 
 QString MainWindow::getFileNameInPDFFormat(QString fileName)

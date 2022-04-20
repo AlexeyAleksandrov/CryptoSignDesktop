@@ -398,7 +398,7 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     params.insert(1, csptest_bat_file.fileName());
     csptest_bat.start("gnome-terminal", params); // запускаем батник
 #endif
-    if (!csptest_bat.waitForStarted())
+    if (!csptest_bat.waitForStarted(120000))
     {
         qDebug() << "The process didnt start" << csptest_bat.error();
         //log.addToLog(&"The process didnt start " [ csptest_bat.error()]);
