@@ -19,7 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
     updateCertificatesList();
 
     connect(ui->tableWidget_files, &my_tableWidget::dropFiles, this, &MainWindow::addFiles);
-//    connect(ui->tableWidget_files, SIGNAL(dropFiles(QStringList)), this, SLOT(addFiles(QStringList)));
+    connect(ui->tableWidget_files, &my_tableWidget::mouseRightClick, this, &MainWindow::filesTableMouseRightClick);
+    connect(ui->tableWidget_files, &my_tableWidget::mouseDoubleClick, this, &MainWindow::filesTableMouseDoubleClick);
+
 }
 
 MainWindow::~MainWindow()
@@ -374,6 +376,9 @@ void MainWindow::addFiles(QStringList files)
 
         ui->tableWidget_files->setItem(rows, 0, item);    // задаем ячейку
     }
+    QStringList tableHorizontalLabels;
+    tableHorizontalLabels << "Файлы" << "Состояние";
+    ui->tableWidget_files->setHorizontalHeaderLabels(tableHorizontalLabels);
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -392,6 +397,122 @@ void MainWindow::paintEvent(QPaintEvent *)
         int size40 = sizeMax - size60 - 2;
         ui->tableWidget_files->setColumnWidth(0, size60);
         ui->tableWidget_files->setColumnWidth(1, size40);
+    }
+}
+
+void MainWindow::filesTableMouseRightClick(QTableWidgetItem *item)
+{
+    QMenu menu;
+
+    // добавление файлов и папок
+    QAction *menuAddFileAction = menu.addAction("Добавить файл");
+//    QAction *menuAddFolderAction = menu.addAction("Добавить папку");
+    QObject::connect(menuAddFileAction, &QAction::triggered, this, [this]() { on_pushButton_filesAdd_clicked(); });
+//    QObject::connect(menuAddFolderAction, &QAction::triggered, this, [this]() { on_addFolderPushButton_clicked(); });
+
+    // добавлем кнопку удалить выбранный файл
+    QString filename;
+    if(item != nullptr)
+    {
+        filename = getFileDirByIndex(item->row());
+        QAction *menuDeleteFile = menu.addAction("Удалить " + QFileInfo(filename).fileName());
+        QObject::connect(menuDeleteFile, &QAction::triggered, this, [=]() { ui->tableWidget_files->removeRow(item->row()); }); // удаление файла
+    }
+
+    if(getSelectedFiles().size() > 0) // если хотя бы 1 файл выделен мышкой
+    {
+        QAction *menuDeleteSelectedAction = menu.addAction("Удалить выбранные");
+        QObject::connect(menuDeleteSelectedAction, &QAction::triggered, this, [this]() { on_pushButton_filesRemove_clicked(); });
+    }
+    if(getSelectedFiles().size() < ui->tableWidget_files->rowCount()) // если хотя бы 1 файл ещё не выделен мышкой
+    {
+        QAction *menuReSelectedAllAction = menu.addAction("Выбрать все");
+        QObject::connect(menuReSelectedAllAction, &QAction::triggered, this, [this]() { ui->tableWidget_files->setSelectedForAllItems(true); });
+    }
+    if(getSelectedFiles().size() > 0) // если хотя бы 1 файл выделен мышкой
+    {
+        QAction *menuReSelectedAllAction = menu.addAction("Снять выделение со всех");
+        QObject::connect(menuReSelectedAllAction, &QAction::triggered, this, [this]() { ui->tableWidget_files->setSelectedForAllItems(false); });
+    }
+//    if(getSignedFiles().size() > 0) // если хотя бы один файл имеет подпись
+//    {
+//        QAction *menuDeleteSignedAction = menu.addAction("Удалить подписанные");
+//        QObject::connect(menuDeleteSignedAction, &QAction::triggered, this, [this]() { on_pushButton_removeSignedFiles_clicked(); });
+//    }
+    if(item != nullptr)
+    {
+//        fileToolTip fileData = getFileToolTip(item->row()); // получаем tooltip файла
+        QString fileName = getFileDirByIndex(item->row());
+
+        QAction *menuOpenFileAction = menu.addAction("Открыть " + QFileInfo(fileName).fileName());
+        QObject::connect(menuOpenFileAction, &QAction::triggered, this, [this, fileName]() { runFile(fileName); });
+
+//        if(fileData.signedFile != "")
+//        {
+//            QAction *menuOpenFileAction = menu.addAction("Открыть подписанный WORD файл");
+//            QObject::connect(menuOpenFileAction, &QAction::triggered, this, [this, fileData]() { runFile(fileData.signedFile); });
+//        }
+//        if(fileData.signedPdfFile != "")
+//        {
+//            QAction *menuOpenFileAction = menu.addAction("Открыть подписанный PDF файл");
+//            QObject::connect(menuOpenFileAction, &QAction::triggered, this, [this, fileData]() { runFile(fileData.signedPdfFile); });
+//        }
+    }
+
+    menu.exec(QCursor::pos());
+}
+
+void MainWindow::filesTableMouseDoubleClick(QTableWidgetItem *item)
+{
+    if(item != nullptr)
+    {
+        on_tableWidget_files_itemDoubleClicked(item);
+    }
+}
+
+QStringList MainWindow::getSelectedFiles()
+{
+    auto table = ui->tableWidget_files; // получаем указатель на таблицу
+    int rows = table->rowCount(); // получам текущее количество строк
+    int cols = table->columnCount(); // получаем количество столбцов
+    QStringList list; // список файлов
+    for (int i=0; i<rows; i++)
+    {
+        bool selected = false; // флаг, что строка выбрана
+        for (int j=0; j<cols; j++)
+        {
+            auto item = table->item(i, j);
+            if(item)
+            {
+                if(item->isSelected()) // если хотя бы один item выбран
+                {
+                    selected = true;
+                }
+            }
+            else
+            {
+                qDebug() << "item пустой " << i << j;
+            }
+        }
+        if(selected) // если в строке что-то выбрано
+        {
+            QString file = getFileDirByIndex(i); // получаем директорию файла по индексу
+            list.append(file); // Добавляем файл в список
+        }
+    }
+    return list;
+}
+
+QString MainWindow::getFileDirByIndex(int index)
+{
+    QTableWidgetItem *item = ui->tableWidget_files->item(index, 0);
+    if(item != nullptr)
+    {
+        return item->toolTip();
+    }
+    else
+    {
+        return "";
     }
 }
 

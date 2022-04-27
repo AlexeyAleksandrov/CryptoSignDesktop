@@ -57,6 +57,10 @@ private slots:
 
 private slots:
     void addFiles(QStringList file); // слот добавления файла
+    void filesTableMouseRightClick(QTableWidgetItem *item);
+    void filesTableMouseDoubleClick(QTableWidgetItem *item);
+    QStringList getSelectedFiles();
+    QString getFileDirByIndex(int index);
 
 private:
     Ui::MainWindow *ui;
