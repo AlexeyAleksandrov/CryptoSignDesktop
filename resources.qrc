@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/mirea_icon.ico</file>
+        <file>resources/Znachok.png</file>
+    </qresource>
+</RCC>

@@ -57,6 +57,19 @@ public:
         {
             return "email = " + this->email + ", name = " + this->name + ", serial = " + this->serial + ", subname = " + this->subname + ", surname = " + this->surname + ", name_and_patronymic = " + this->name_and_patronymic + ", date_start = " + this->startDate.toString() + ", date_end = " + this->finishDate.toString();
         }
+
+        bool operator ==(CryptoSignData b)
+        {
+            return this->name == b.name
+                    && this->email == b.email
+                    && this->serial == b.serial
+                    && this->subname == b.subname
+                    && this->surname == b.surname
+                    && this->name_and_patronymic == b.name_and_patronymic
+                    && this->startDate == b.startDate
+                    && this->finishDate == b.finishDate
+                    && this->index == b.index;
+        }
     };
 
 signals:

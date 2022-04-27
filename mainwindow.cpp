@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include "documnetsigncreator.h"
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -171,20 +172,25 @@ QString MainWindow::getFileNameInPDFFormat(QString fileName)
             .replace(".odt", ".pdf");
 }
 
-
-void MainWindow::on_pushButton_clicked()
+void MainWindow::runFile(QString file)
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    "/home",
-                                                    tr("Documents (*.docx *.doc *.rtf)"));
-
-    QFile file(fileName);
-    file.open(QIODevice::WriteOnly);
-    file.write("кириллица в файле");
-    file.close();
-
-    qDebug() << "Готово!";
+    QDesktopServices::openUrl(QUrl("file:" + file));
 }
+
+
+//void MainWindow::on_pushButton_clicked()
+//{
+//    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+//                                                    "/home",
+//                                                    tr("Documents (*.docx *.doc *.rtf)"));
+
+//    QFile file(fileName);
+//    file.open(QIODevice::WriteOnly);
+//    file.write("кириллица в файле");
+//    file.close();
+
+//    qDebug() << "Готово!";
+//}
 
 
 void MainWindow::on_pushButton_filesAdd_clicked()
@@ -366,5 +372,28 @@ void MainWindow::on_pushButton_choseOutputDir_clicked()
         ui->lineEdit_outputDir->setText(dir);
     }
 
+}
+
+
+void MainWindow::on_toolButton_searchCertificate_clicked()
+{
+    DialogSearchSertificate dialog; // создаём диалог поиска сертификата
+    dialog.setAllSertificatesList(cryptoPro.certmgr.getSertifactesList());  // задаём имеющиеся сертификаты
+    dialog.exec();  //запускаем диалог и ждём выбора
+    auto cert = dialog.getChosedSertificate();
+    if(cert.serial != "")
+    {
+        auto signsList = cryptoPro.certmgr.getSertifactesList();    // получаем список сертификатов
+        int index = signsList.indexOf(cert);    // получаем индекс выбранного сертификата
+        ui->comboBox_certificates->setCurrentIndex(index);  // устанавливаем выбранный индекс
+    }
+}
+
+
+void MainWindow::on_tableWidget_files_itemDoubleClicked(QTableWidgetItem *item)
+{
+    int row = item->row();
+    QString sourceFile = ui->tableWidget_files->item(row, 0)->toolTip();    // получаем путь исходного файла
+    runFile(sourceFile);
 }
 

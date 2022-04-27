@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(testFiles VERSION 0.1 LANGUAGES CXX)
+project(CryptoSignDesktop VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -23,36 +23,38 @@ set(PROJECT_SOURCES
         cryptopro_csp.h
         documnetsigncreator.cpp
         documnetsigncreator.h
-
-
+        dialogsearchsertificate.cpp
+        dialogsearchsertificate.h
+        dialogsearchsertificate.ui
+        resources.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(testFiles
+    qt_add_executable(CryptoSignDesktop
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET testFiles APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#    set_property(TARGET CryptoSignDesktop APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
-        add_library(testFiles SHARED
+        add_library(CryptoSignDesktop SHARED
             ${PROJECT_SOURCES}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
-        add_executable(testFiles
+        add_executable(CryptoSignDesktop
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-target_link_libraries(testFiles PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(CryptoSignDesktop PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-set_target_properties(testFiles PROPERTIES
+set_target_properties(CryptoSignDesktop PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -61,5 +63,5 @@ set_target_properties(testFiles PROPERTIES
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(testFiles)
+    qt_finalize_executable(CryptoSignDesktop)
 endif()

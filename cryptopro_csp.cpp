@@ -48,7 +48,7 @@ QString CryptoPRO_CSP::s_certmgr::getConsoleText(QStringList options)
     QProcess certmgr_process;
     certmgr_process.setReadChannel(QProcess::StandardOutput);
 
-    qDebug() << "runfile = " << runfile;
+//    qDebug() << "runfile = " << runfile;
     certmgr_process.start(this->runfile, options); // запускаем процесс
     QString consoleText;
     if(!certmgr_process.waitForStarted())
@@ -113,10 +113,10 @@ QList<CryptoPRO_CSP::CryptoSignData>CryptoPRO_CSP::s_certmgr::getSertifactesList
         return QList<CryptoSignData>(); // возвращаем пустоту
     }
     QStringList cmdBlocksList = cmd_out.split((QString)"----", SPLITTER);
-    for(auto && block : cmdBlocksList)
-    {
-        qDebug() << "block = " << block;
-    }
+//    for(auto && block : cmdBlocksList)
+//    {
+//        qDebug() << "block = " << block;
+//    }
     //log.addToLog("cmd_out = " + cmd_out);
     QList<CryptoSignData> SignsList; // список подписей
     for(auto &&block : cmdBlocksList) // рзбиваем на блоки, которые представляют из себя подписи (это строки между 1------ и 2----- и т.д.
@@ -133,7 +133,7 @@ QList<CryptoPRO_CSP::CryptoSignData>CryptoPRO_CSP::s_certmgr::getSertifactesList
             {
                 // ФИО + e-mail
                 //log.addToLog("Обрабатываем строку: " + line);
-                qDebug() << "Обрабатываем строку: " + line;
+//                qDebug() << "Обрабатываем строку: " + line;
                 if(line.contains("Subject") || line.contains("Субъект"))
                 {
                     QString subline = line.remove("Subject             : ");
@@ -313,14 +313,14 @@ QList<CryptoPRO_CSP::CryptoSignData>CryptoPRO_CSP::s_certmgr::getSertifactesList
 void CryptoPRO_CSP::s_certmgr::setCryptoProDirectory(const QString &value)
 {
     runfile = value + runfile;
-    qDebug() << "s_certmgr runfile = " << runfile;
+//    qDebug() << "s_certmgr runfile = " << runfile;
 }
 
 bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSignData sign)
 {
     //log.addToLog("Запускатся процесс подписи файла " + file);
 
-    qDebug() << "sign runfile = " << runfile << " csptest = " << CRYPTO_PRO_DIRECTORY;
+//    qDebug() << "sign runfile = " << runfile << " csptest = " << CRYPTO_PRO_DIRECTORY;
     QStringList params = QStringList() << file << QString::number(sign.index) << sign.email; 
 
 #ifdef _WIN32
@@ -461,5 +461,5 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
 void CryptoPRO_CSP::s_csptest::setCryptoProDirectory(const QString &value)
 {
     runfile = value + runfile;
-    qDebug() << " " << runfile;
+//    qDebug() << " " << runfile;
 }
