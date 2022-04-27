@@ -97,6 +97,7 @@ void DialogSearchSertificate::updateSearchedSerts(QString t)
 void DialogSearchSertificate::setAllSertificatesList(const QList<CryptoPRO_CSP::CryptoSignData> &value)
 {
     allSertificatesList = value;
+    findedSerts = value;
     setCertificatesToTable(value);
 //    for (auto &&sert : allSertificatesList)
 //    {

@@ -22,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tableWidget_files, &my_tableWidget::mouseRightClick, this, &MainWindow::filesTableMouseRightClick);
     connect(ui->tableWidget_files, &my_tableWidget::mouseDoubleClick, this, &MainWindow::filesTableMouseDoubleClick);
 
+    QStringList tableHorizontalLabels;
+    tableHorizontalLabels << "Файлы" << "Состояние";
+    ui->tableWidget_files->setHorizontalHeaderLabels(tableHorizontalLabels);
 }
 
 MainWindow::~MainWindow()

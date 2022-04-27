@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/resources/mirea_icon.ico</normaloff>:/resources/mirea_icon.ico</iconset>
+    <normaloff>:/resources/MIREA_Gerb_Colour.png</normaloff>:/resources/MIREA_Gerb_Colour.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -305,7 +305,7 @@
      <x>0</x>
      <y>0</y>
      <width>880</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

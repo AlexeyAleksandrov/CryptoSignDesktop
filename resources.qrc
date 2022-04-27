@@ -5,5 +5,6 @@
         <file>resources/logo_background_500_400.png</file>
         <file>resources/search_icon.png</file>
         <file>resources/search_green.png</file>
+        <file>resources/MIREA_Gerb_Colour.png</file>
     </qresource>
 </RCC>
