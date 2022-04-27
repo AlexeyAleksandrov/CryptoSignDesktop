@@ -18,34 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     updateCertificatesList();
 
-//    QProcess p;
-//    p.setWorkingDirectory("/home/asus/build-testFiles-Desktop_Qt_5_15_2_GCC_64bit-Debug");
-//    p.start("/home/asus/build-testFiles-Desktop_Qt_5_15_2_GCC_64bit-Debug/csptest_bat.sh", QStringList() << "/home/asus/doc_out/exported_demodoc.pdf" << "0" << "danilov@mirea.ru");
-//    bool s = p.waitForStarted();
-//    if(!s) qDebug() << "failed to start" << p.exitCode() << p.exitStatus();
-//    bool f = p.waitForFinished();
-//    if(!f) qDebug() << "failed to finish" << p.exitCode() << p.exitStatus();
-//    else qDebug() << "ready" << p.exitCode() << p.exitStatus();
-
-//    QProcess p;
-//    QString prog = QString(CRYPTO_PRO_DIRECTORY) + CSPTEST;
-//    QStringList args = QStringList() <<  "-sfsign" << "-sign" << "-detached" << "-add" << "-in" << "home/asus/doc_out/exported_demodoc.pdf" << "-out" << "home/asus/doc_out/exported_demodoc.pdf.sig" << "-my" << "danilov@mirea.ru";
-//    qDebug() << prog << args;
-//    p.start(prog, args);
-//    bool s = p.waitForStarted();
-//    if(!s) qDebug() << "failed to start" << p.exitCode() << p.exitStatus();
-//    bool f = p.waitForFinished();
-//    if(!f) qDebug() << "failed to finish" << p.exitCode() << p.exitStatus();
-//    else qDebug() << "ready" << p.exitCode() << p.exitStatus();
-
-//    QProcess p;
-////    p.setWorkingDirectory("/home/asus/build-testFiles-Desktop_Qt_5_15_2_GCC_64bit-Debug");
-//    p.start("gnome-terminal", QStringList() << "-e" << "/home/asus/build-testFiles-Desktop_Qt_5_15_2_GCC_64bit-Debug/csptest_bat.sh" << "/home/asus/doc_out/exported_demodoc.pdf" << "0" << "danilov@mirea.ru");
-//    bool s = p.waitForStarted();
-//    if(!s) qDebug() << "failed to start" << p.exitCode() << p.exitStatus();
-//    bool f = p.waitForFinished();
-//    if(!f) qDebug() << "failed to finish" << p.exitCode() << p.exitStatus();
-//    else qDebug() << "ready" << p.exitCode() << p.exitStatus();
+    connect(ui->tableWidget_files, &my_tableWidget::dropFiles, this, &MainWindow::addFiles);
+//    connect(ui->tableWidget_files, SIGNAL(dropFiles(QStringList)), this, SLOT(addFiles(QStringList)));
 }
 
 MainWindow::~MainWindow()
@@ -198,37 +172,7 @@ void MainWindow::on_pushButton_filesAdd_clicked()
     QStringList files = QFileDialog::getOpenFileNames(this, tr("Open File"),
                                                       "/home",
                                                       tr("Documents (*.docx *.doc *.rtf *.pdf *.xlsx *.xls)"));
-    for(auto file : files)
-    {
-        int rows = ui->tableWidget_files->rowCount();
-        // проверяем, что такого файла ещё нет
-        bool contains = false;
-        for(int i=0; i<rows; i++)
-        {
-            if(ui->tableWidget_files->item(i, 0)->toolTip() == file)
-            {
-                contains = true;
-                break;
-            }
-        }
-        if(contains)    // если файла содержится в списке
-        {
-            continue;   // то просто игнорируем его
-        }
-
-        // добавляем файл в таблицу
-        ui->tableWidget_files->setRowCount(rows+1);   // добавляем строку
-
-        //        ui->tableWidget->setItem(rows, 0, new QTableWidgetItem);    // столбец файла
-        ui->tableWidget_files->setItem(rows, 1, new QTableWidgetItem("Добавлен"));    // столбец статуса
-
-        QString filename = QFileInfo(file).fileName();
-        QTableWidgetItem *item = new QTableWidgetItem;
-        item->setText(filename);
-        item->setToolTip(file); // записываем полный путь к файлу в toolTip
-
-        ui->tableWidget_files->setItem(rows, 0, item);    // задаем ячейку
-    }
+    addFiles(files);
 }
 
 
@@ -395,5 +339,59 @@ void MainWindow::on_tableWidget_files_itemDoubleClicked(QTableWidgetItem *item)
     int row = item->row();
     QString sourceFile = ui->tableWidget_files->item(row, 0)->toolTip();    // получаем путь исходного файла
     runFile(sourceFile);
+}
+
+void MainWindow::addFiles(QStringList files)
+{
+    for(auto file : files)
+    {
+        int rows = ui->tableWidget_files->rowCount();
+        // проверяем, что такого файла ещё нет
+        bool contains = false;
+        for(int i=0; i<rows; i++)
+        {
+            if(ui->tableWidget_files->item(i, 0)->toolTip() == file)
+            {
+                contains = true;
+                break;
+            }
+        }
+        if(contains)    // если файла содержится в списке
+        {
+            return;   // то просто игнорируем его
+        }
+
+        // добавляем файл в таблицу
+        ui->tableWidget_files->setRowCount(rows+1);   // добавляем строку
+
+        //        ui->tableWidget->setItem(rows, 0, new QTableWidgetItem);    // столбец файла
+        ui->tableWidget_files->setItem(rows, 1, new QTableWidgetItem("Добавлен"));    // столбец статуса
+
+        QString filename = QFileInfo(file).fileName();
+        QTableWidgetItem *item = new QTableWidgetItem;
+        item->setText(filename);
+        item->setToolTip(file); // записываем полный путь к файлу в toolTip
+
+        ui->tableWidget_files->setItem(rows, 0, item);    // задаем ячейку
+    }
+}
+
+void MainWindow::paintEvent(QPaintEvent *)
+{
+#ifdef SHOW_CENTRAL_GEOMERTY
+    qDebug() << "Высота: " << this->height() << "Ширина: " << this->width();
+#endif
+#ifdef SHOW_TABLEFILES_GEOMERTY
+    qDebug() << ui->tableWidget_filestatus->height() << ui->tableWidget_filestatus->width();
+#endif
+    if(ui->tableWidget_files->columnCount() >= 2)
+    {
+        int sizeMax = ui->tableWidget_files->width();
+        int sizeMin = sizeMax/100;
+        int size60 = sizeMin*60;
+        int size40 = sizeMax - size60 - 2;
+        ui->tableWidget_files->setColumnWidth(0, size60);
+        ui->tableWidget_files->setColumnWidth(1, size40);
+    }
 }
 

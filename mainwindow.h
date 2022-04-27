@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <cryptopro_csp.h>
 #include <dialogsearchsertificate.h>
+#include <my_tablewidget.h>
+#include <QPaintEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -50,6 +52,11 @@ private slots:
     void on_toolButton_searchCertificate_clicked();
 
     void on_tableWidget_files_itemDoubleClicked(QTableWidgetItem *item);
+
+    void paintEvent(QPaintEvent *);
+
+private slots:
+    void addFiles(QStringList file); // слот добавления файла
 
 private:
     Ui::MainWindow *ui;

@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>resources/mirea_icon.ico</file>
         <file>resources/Znachok.png</file>
+        <file>resources/logo_background_500_400.png</file>
+        <file>resources/search_icon.png</file>
+        <file>resources/search_green.png</file>
     </qresource>
 </RCC>

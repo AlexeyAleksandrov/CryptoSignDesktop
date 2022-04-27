@@ -27,6 +27,8 @@ set(PROJECT_SOURCES
         dialogsearchsertificate.h
         dialogsearchsertificate.ui
         resources.qrc
+        my_tablewidget.cpp
+        my_tablewidget.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
