@@ -6,6 +6,15 @@
 #include <dialogsearchsertificate.h>
 #include <my_tablewidget.h>
 #include <QPaintEvent>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+
+#define KEY_LAST_CERTIFICATE "lastCerificate"   // последний использованный сертификат
+#define KEY_MAIN_CERTIFICATE "mainCertificate"  // сертификат по-умолчанию
+#define KEY_DRAW_LOGO "drawLogo"    // флаг рисования герба
+#define KEY_OUTPUT_DIRECTORY "outputDir"    // папка вывода
+#define KEY_DISPLAY_NAME "displayName"  // флаг отображения имени владельца, вместо названия сертификата
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,6 +37,11 @@ public:
         ERROR_SIGN_NO_CREATED,
         READY
     };
+
+private:
+    void loadProgramData();
+    void saveProgramData();
+
 
 private:
     void updateCertificatesList();  // функция обновления сертификатов

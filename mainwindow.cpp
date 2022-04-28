@@ -15,8 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     cryptoPro.setCryptoProDirectory(CRYPTO_PRO_DIRECTORY);
     ui->tableWidget_files->setColumnCount(2);
+    ui->radioButton_displayLabel->setChecked(true);
 
-    updateCertificatesList();
+    updateCertificatesList();   // загружаем список сертификатов
+    loadProgramData();  // загружаем данные программы
 
     connect(ui->tableWidget_files, &my_tableWidget::dropFiles, this, &MainWindow::addFiles);
     connect(ui->tableWidget_files, &my_tableWidget::mouseRightClick, this, &MainWindow::filesTableMouseRightClick);
@@ -29,7 +31,87 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    saveProgramData();
     delete ui;
+}
+
+void MainWindow::loadProgramData()
+{
+    QFile saveFile("settings.json");
+    bool isOpen = saveFile.open(QIODevice::ReadOnly);
+    if(!isOpen)
+    {
+        qDebug() << "Не удалось прочитать настройки программы. Не удалось открыть файл";
+        return;
+    }
+
+    QByteArray jsonText = saveFile.readAll();   // считываем текст JSON
+    saveFile.close();
+
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonText); // парсим в JSON документ
+    QJsonObject jsonObject = jsonDocument.object(); // конвертируем в объект JSON
+
+    QString lastCertificate = jsonObject[KEY_LAST_CERTIFICATE].toString();  // получаем последний сертификат
+    QString outputDir = jsonObject[KEY_OUTPUT_DIRECTORY].toString();    // получаем папку вывода
+    bool drawLogo = jsonObject[KEY_DRAW_LOGO].toBool(); // получаем значение отрисовки герба
+    bool displayName = jsonObject[KEY_DISPLAY_NAME].toBool(); // получаем состояние отображения имени владельца вместо названия сертфиката
+
+    if(lastCertificate != "")   // устанавливаем последний выбранный сертификат
+    {
+        QList<CryptoPRO_CSP::CryptoSignData> listCertificates = cryptoPro.certmgr.getSertifactesList(); // получаем список сертификатов
+        if(listCertificates.size() > 0)
+        {
+            for(int i=0; i<listCertificates.size(); i++)
+            {
+                if(listCertificates[i].serial == lastCertificate)
+                {
+                    ui->comboBox_certificates->setCurrentIndex(i);  // устанавливаем соответсвующий индекс
+                    break;
+                }
+            }
+        }
+    }
+
+    ui->lineEdit_outputDir->setText(outputDir);
+    ui->checkBox_drawLogo->setChecked(drawLogo);
+
+    if(displayName)
+    {
+        ui->radioButton_displayName->setChecked(true);
+    }
+    else
+    {
+        ui->radioButton_displayLabel->setChecked(true);
+    }
+}
+
+void MainWindow::saveProgramData()
+{
+    QJsonDocument jsonDocument;
+    QJsonObject jsonObject;
+
+    if(ui->comboBox_certificates->count() > 0)  // если в системе есть сертификаты
+    {
+        QString currentCertificate = getCurrentSign().serial;
+        jsonObject.insert(KEY_LAST_CERTIFICATE, currentCertificate);    // добавляем последний сертификат
+    }
+
+    jsonObject.insert(KEY_DRAW_LOGO, ui->checkBox_drawLogo->isChecked());   // добавляем состояние чекбокса рисонивая герба
+    jsonObject.insert(KEY_OUTPUT_DIRECTORY, ui->lineEdit_outputDir->text());   // добавляем папку вывода
+    jsonObject.insert(KEY_DISPLAY_NAME, ui->radioButton_displayName->isChecked());  // добавляем состояние отображения имени владельца вместо названия сертфиката
+
+    jsonDocument.setObject(jsonObject); // добавляем объект в документ
+
+    QFile saveFile("settings.json");
+    bool isOpen = saveFile.open(QIODevice::WriteOnly);
+    if(!isOpen)
+    {
+        qDebug() << "Не удалось сохранить настройки программы. Не удалось открыть файл";
+        return;
+    }
+
+    saveFile.write(jsonDocument.toJson());
+    saveFile.close();
 }
 
 void MainWindow::updateCertificatesList()
