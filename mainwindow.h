@@ -15,6 +15,8 @@
 #define KEY_DRAW_LOGO "drawLogo"    // флаг рисования герба
 #define KEY_OUTPUT_DIRECTORY "outputDir"    // папка вывода
 #define KEY_DISPLAY_NAME "displayName"  // флаг отображения имени владельца, вместо названия сертификата
+#define KEY_SIGN_TYPE "signType"    // флаг типа подписи - откреплённая или прикреплённая
+#define KEY_SIGN_FORMAT "signFormat"    // флаг формата - DER или base64
 
 #define SIGN_TYPE_DETACHED 0
 #define SIGN_TYPE_ATTACHED 1

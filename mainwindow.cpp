@@ -56,6 +56,9 @@ void MainWindow::loadProgramData()
     bool drawLogo = jsonObject[KEY_DRAW_LOGO].toBool(); // получаем значение отрисовки герба
     bool displayName = jsonObject[KEY_DISPLAY_NAME].toBool(); // получаем состояние отображения имени владельца вместо названия сертфиката
 
+    int signType = jsonObject[KEY_SIGN_TYPE].toInt(); // получаем тип вставки
+    int signFormat = jsonObject[KEY_SIGN_FORMAT].toInt(); // получаем формат подписи
+
     if(lastCertificate != "")   // устанавливаем последний выбранный сертификат
     {
         QList<CryptoPRO_CSP::CryptoSignData> listCertificates = cryptoPro.certmgr.getSertifactesList(); // получаем список сертификатов
@@ -83,6 +86,9 @@ void MainWindow::loadProgramData()
     {
         ui->radioButton_displayLabel->setChecked(true);
     }
+
+    ui->comboBox_signType->setCurrentIndex(signType);
+    ui->comboBox_signFormat->setCurrentIndex(signFormat);
 }
 
 void MainWindow::saveProgramData()
@@ -99,6 +105,9 @@ void MainWindow::saveProgramData()
     jsonObject.insert(KEY_DRAW_LOGO, ui->checkBox_drawLogo->isChecked());   // добавляем состояние чекбокса рисонивая герба
     jsonObject.insert(KEY_OUTPUT_DIRECTORY, ui->lineEdit_outputDir->text());   // добавляем папку вывода
     jsonObject.insert(KEY_DISPLAY_NAME, ui->radioButton_displayName->isChecked());  // добавляем состояние отображения имени владельца вместо названия сертфиката
+
+    jsonObject.insert(KEY_SIGN_TYPE, ui->comboBox_signType->currentIndex());   // добавляем тип вставки
+    jsonObject.insert(KEY_SIGN_FORMAT, ui->comboBox_signFormat->currentIndex()); // добавляем формат подписи
 
     jsonDocument.setObject(jsonObject); // добавляем объект в документ
 
