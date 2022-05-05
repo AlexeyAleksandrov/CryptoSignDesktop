@@ -16,6 +16,12 @@
 #define KEY_OUTPUT_DIRECTORY "outputDir"    // папка вывода
 #define KEY_DISPLAY_NAME "displayName"  // флаг отображения имени владельца, вместо названия сертификата
 
+#define SIGN_TYPE_DETACHED 0
+#define SIGN_TYPE_ATTACHED 1
+
+#define SIGN_FORMAT_DER 0
+#define SIGN_FORMAT_BASE64 1
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE

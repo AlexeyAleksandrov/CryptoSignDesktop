@@ -93,7 +93,7 @@ private:
     struct s_csptest
     {
     public:
-        bool createSign(QString file, CryptoSignData sign); // создать подпись для файла
+        bool createSign(QString file, CryptoSignData sign, bool detached = true, bool base64 = false); // создать подпись для файла
         void setCryptoProDirectory(const QString &value);
     private:
         QString runfile = CSPTEST;

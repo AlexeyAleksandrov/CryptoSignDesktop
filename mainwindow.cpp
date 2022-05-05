@@ -314,6 +314,18 @@ void MainWindow::on_pushButton_createSign_clicked()
         return;
     }
 
+    bool detached = false;  // отсоединённая подпись
+    if(ui->comboBox_signType->currentIndex() == SIGN_TYPE_DETACHED)
+    {
+        detached = true;
+    }
+
+    bool base64 = false;    // тип base64, по умолчанию DER
+    if(ui->comboBox_signFormat->currentIndex() == SIGN_FORMAT_BASE64)
+    {
+        base64 = true;
+    }
+
     for(int i=0; i<filesCount; i++)
     {
         setFileStatus(i, WAITING);
@@ -367,7 +379,7 @@ void MainWindow::on_pushButton_createSign_clicked()
             continue;
         }
 
-        bool signCreated = cryptoPro.csptest.createSign(outputFile, currentSign);   // создаём подпись к файлу
+        bool signCreated = cryptoPro.csptest.createSign(outputFile, currentSign, detached, base64);   // создаём подпись к файлу
         if(signCreated)
         {
             setFileStatus(i, READY);

@@ -316,7 +316,7 @@ void CryptoPRO_CSP::s_certmgr::setCryptoProDirectory(const QString &value)
 //    qDebug() << "s_certmgr runfile = " << runfile;
 }
 
-bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSignData sign)
+bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSignData sign, bool detached, bool base64)
 {
     //log.addToLog("Запускатся процесс подписи файла " + file);
 
@@ -328,7 +328,16 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     QString bat_text = QString("echo %2 | \"") + runfile + QString("\" -sfsign -sign -detached -add -in %1 -out %1.sig -my %3"); // универсальный текст батника
 #elif __linux__
     QFile csptest_bat_file(QDir::currentPath() + "/csptest_bat.sh");
-    QString bat_text = QString("echo %2 | \"") + runfile + QString("\" -sfsign -sign -detached -add -in \"%1\" -out \"%1.sig\" -my %3"); // универсальный текст батника
+    QString bat_text = QString("echo %2 | \"")+ runfile + QString("\" -sfsign -sign");
+    if(detached)
+    {
+        bat_text.append(" -detached");
+    }
+    if(base64)
+    {
+        bat_text.append(" -base64");
+    }
+    bat_text.append(" -add -in \"%1\" -out \"%1.sig\" -my %3"); // универсальный текст батника
     bat_text = bat_text.arg(params.at(0)).arg(params.at(1)).arg(params.at(2));
 #endif
 
