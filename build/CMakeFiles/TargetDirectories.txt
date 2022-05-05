@@ -1,0 +1,4 @@
+/home/asus/CryptoSignDesktop/build/CMakeFiles/rebuild_cache.dir
+/home/asus/CryptoSignDesktop/build/CMakeFiles/edit_cache.dir
+/home/asus/CryptoSignDesktop/build/CMakeFiles/CryptoSignDesktop.dir
+/home/asus/CryptoSignDesktop/build/CMakeFiles/CryptoSignDesktop_autogen.dir

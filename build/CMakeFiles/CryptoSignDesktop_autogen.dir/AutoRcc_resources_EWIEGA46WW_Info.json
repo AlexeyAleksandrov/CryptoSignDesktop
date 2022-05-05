@@ -1,0 +1,27 @@
+{
+	"BUILD_DIR" : "/home/asus/CryptoSignDesktop/build/CryptoSignDesktop_autogen",
+	"CMAKE_BINARY_DIR" : "/home/asus/CryptoSignDesktop/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/asus/CryptoSignDesktop/build",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/asus/CryptoSignDesktop",
+	"CMAKE_SOURCE_DIR" : "/home/asus/CryptoSignDesktop",
+	"INCLUDE_DIR" : "/home/asus/CryptoSignDesktop/build/CryptoSignDesktop_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/asus/CryptoSignDesktop/resources/MIREA_Gerb_Colour.png",
+		"/home/asus/CryptoSignDesktop/resources/logo_background_500_400.png",
+		"/home/asus/CryptoSignDesktop/resources/search_green.png",
+		"/home/asus/CryptoSignDesktop/resources/mirea_icon.ico",
+		"/home/asus/CryptoSignDesktop/resources/Znachok.png",
+		"/home/asus/CryptoSignDesktop/resources/search_icon.png"
+	],
+	"LOCK_FILE" : "/home/asus/CryptoSignDesktop/build/CMakeFiles/CryptoSignDesktop_autogen.dir/AutoRcc_resources_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "resources" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_resources.cpp",
+	"RCC_EXECUTABLE" : "/home/asus/Qt/5.15.2/gcc_64/bin/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/asus/CryptoSignDesktop/build/CMakeFiles/CryptoSignDesktop_autogen.dir/AutoRcc_resources_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/home/asus/CryptoSignDesktop/resources.qrc",
+	"VERBOSITY" : 0
+}
