@@ -296,6 +296,14 @@ void MainWindow::on_pushButton_filesRemove_clicked()
 
 void MainWindow::on_pushButton_createSign_clicked()
 {
+    // если нужно оборвать процесс
+    if(ui->pushButton_createSign->text() == "Отмена")
+    {
+        signProcessNeedCancel = true;
+        QApplication::processEvents();  // заставляем программу это обработать
+        return;
+    }
+
     int filesCount = ui->tableWidget_files->rowCount();
     QString outputDir = ui->lineEdit_outputDir->text();
     if(filesCount == 0)
@@ -370,6 +378,8 @@ void MainWindow::on_pushButton_createSign_clicked()
     docSignCreator.setCheckTransitionToNewPage(checkNewPage);
     docSignCreator.setInsertType(insertType);
 
+    ui->pushButton_createSign->setText("Отмена");
+
     for(int i=0; i<filesCount; i++)
     {
         setFileStatus(i, IN_PROCESS);
@@ -397,7 +407,24 @@ void MainWindow::on_pushButton_createSign_clicked()
         {
             setFileStatus(i, ERROR_SIGN_NO_CREATED);
         }
+
+        if(signProcessNeedCancel)
+        {
+            for(int i=0; i<filesCount; i++) // заменяем всем необработанным файлам статус на добавлен
+            {
+                if(ui->tableWidget_files->item(i, 1)->text() == "В очереди")
+                {
+                    setFileStatus(i, ADDED);
+                }
+            }
+            break;
+        }
+
+        QApplication::processEvents();  // прогружаем интерфейс
     }
+
+    signProcessNeedCancel = false;
+    ui->pushButton_createSign->setText("Подписать");
 
     QMessageBox::information(this, "", "Готово!");
 }

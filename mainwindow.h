@@ -90,5 +90,6 @@ private:
     Ui::MainWindow *ui;
 
     CryptoPRO_CSP cryptoPro;
+    bool signProcessNeedCancel = false;
 };
 #endif // MAINWINDOW_H
