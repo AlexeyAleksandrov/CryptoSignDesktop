@@ -412,21 +412,6 @@ void MainWindow::on_comboBox_certificates_currentIndexChanged(int index)
     ui->label_signOwnerValue->setText(currentSign.subname);
 }
 
-
-void MainWindow::on_pushButton_choseOutputDir_clicked()
-{
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                    "/home",
-                                                    QFileDialog::ShowDirsOnly
-                                                    | QFileDialog::DontResolveSymlinks);
-    if(dir != "")
-    {
-        ui->lineEdit_outputDir->setText(dir);
-    }
-
-}
-
-
 void MainWindow::on_toolButton_searchCertificate_clicked()
 {
     DialogSearchSertificate dialog; // создаём диалог поиска сертификата
@@ -620,5 +605,39 @@ QString MainWindow::getFileDirByIndex(int index)
     {
         return "";
     }
+}
+
+
+void MainWindow::on_toolButton_choseOutputDir_clicked()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                    "/home",
+                                                    QFileDialog::ShowDirsOnly
+                                                    | QFileDialog::DontResolveSymlinks);
+    if(dir != "")
+    {
+        ui->lineEdit_outputDir->setText(dir);
+    }
+}
+
+
+void MainWindow::on_toolButton_signInsertTypeInfo_clicked()
+{
+    QString text = "На выбор предоставляется 2 варианта вставки изображения подписи в документ:\n"
+                   "\n"
+                   "\n"
+                   "1) В конец документа. Изображение подписи будет вставлено на последнюю страницу документа, после последней строки содержащей текст, картинки и любую другую значащую информацию.\n"
+                   "\n"
+                   "Обратите внимание: Для PDF и Excel документов колонтитулы учитываются!\n"
+                   "\n"
+                   "\n"
+                   "2) По тэгу. Данный тип подписи работает только для документов формата Word. В этом случае необходимо в документе создать таблицу, и, в соответсвующие ячейки, установить тэги:\n"
+                   "\n"
+                   "<имя_владельца_подписи> - содержимое ячейки таблицы, содержащей данный тэг будет заменено на ФИО владельца подписи\n"
+                   "\n"
+                   "<место_для_подписи> - содержимое ячейки таблицы, содержащей данный тэг будет заменено на изображение подписи.\n"
+                   "\n"
+                   "Обратите внимание: Количество тэгов в одном документе неограничено. Каждая ячейка таблицы, содержащая текст, будет заменена в соотвествии с информацией, полученной с сертификата подписи.";
+    QMessageBox::information(this, "", text);
 }
 

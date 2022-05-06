@@ -69,8 +69,6 @@ private slots:
 
     void on_comboBox_certificates_currentIndexChanged(int index);
 
-    void on_pushButton_choseOutputDir_clicked();
-
     void on_toolButton_searchCertificate_clicked();
 
     void on_tableWidget_files_itemDoubleClicked(QTableWidgetItem *item);
@@ -83,6 +81,10 @@ private slots:
     void filesTableMouseDoubleClick(QTableWidgetItem *item);
     QStringList getSelectedFiles();
     QString getFileDirByIndex(int index);
+
+    void on_toolButton_choseOutputDir_clicked();
+
+    void on_toolButton_signInsertTypeInfo_clicked();
 
 private:
     Ui::MainWindow *ui;
