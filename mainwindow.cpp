@@ -436,8 +436,28 @@ void MainWindow::on_tableWidget_files_itemDoubleClicked(QTableWidgetItem *item)
 
 void MainWindow::addFiles(QStringList files)
 {
+    qDebug() << "Добавляемые файлы: " << files;
+
+    QStringList allowFileExtends;   // разрешённые расширения файлов
+    allowFileExtends << ".docx" << ".doc" << ".rtf" << ".pdf" << ".xlsx" << ".xls";
+
     for(auto file : files)
     {
+        bool fileAllowToAppend = false; // разрешение на добавление данного файла
+        for(auto extend : allowFileExtends)
+        {
+            if(file.endsWith(extend))
+            {
+                fileAllowToAppend = true;
+                break;
+            }
+        }
+
+        if(!fileAllowToAppend)  // если нельзя добавить данный файл
+        {
+            continue;
+        }
+
         int rows = ui->tableWidget_files->rowCount();
         // проверяем, что такого файла ещё нет
         bool contains = false;

@@ -193,8 +193,12 @@ void my_tableWidget::dropEvent(QDropEvent *event)
         {
             QString link_str = link.toString(); // переводим в строку
             if(link_str.contains("file:///")) // если содержит файл
-            {
+            {                
+#ifdef __linux__
+                QString file_name = link_str.remove("file://"); // очищаем от мусора
+#elif _WIN32
                 QString file_name = link_str.remove("file:///"); // очищаем от мусора
+#endif
                 files.append(file_name); // добавляем в список
             }
         }

@@ -11,7 +11,7 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
 {
     if(!QFile::exists(fileInput))
     {
-        qDebug() << QString::fromLocal8Bit("Файл для подписи не найден!");
+        qDebug() << QString::fromLocal8Bit("Файл для подписи не найден! ") + fileInput;
         return false;
     }
 
@@ -23,7 +23,7 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
 
     if(!fileOutput.endsWith(".pdf"))
     {
-        qDebug() << QString::fromLocal8Bit("Выходной файл должен быть формата *.pdf");
+        qDebug() << QString::fromLocal8Bit("Выходной файл должен быть формата *.pdf ") + fileOutput;
         return false;
     }
 
