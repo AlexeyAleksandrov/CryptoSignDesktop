@@ -403,9 +403,18 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
 #ifdef _WIN32
     csptest_bat.start(csptest_bat_file.fileName(), params); // запускаем батник с параметрами
 #elif __linux__
-    params.insert(0, "-e");
-    params.insert(1, csptest_bat_file.fileName());
-    csptest_bat.start("gnome-terminal", params); // запускаем батник
+//    params.insert(0, "-e");
+//    params.insert(1, csptest_bat_file.fileName());
+//    csptest_bat.start("gnome-terminal", params); // запускаем батник
+
+    // это как вариант, но такое себе, хотя работает
+//    QStringList gnomeTerminalParams;
+//    gnomeTerminalParams << "--" << csptest_bat_file.fileName();
+//    csptest_bat.start("gnome-terminal", gnomeTerminalParams); // запускаем батник
+
+    QStringList shParams;
+    shParams << "-c" << csptest_bat_file.fileName();
+    csptest_bat.start("sh", shParams); // запускаем батник
 #endif
     if (!csptest_bat.waitForStarted(120000))
     {
@@ -448,9 +457,9 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
         return false;
     }
     #elif __linux__
-    qDebug() << "waiting";
-    QThread::sleep(5);
-    qDebug() << "unwaiting";
+//    qDebug() << "waiting";
+//    QThread::sleep(5);
+//    qDebug() << "unwaiting";
     QFile sigFile(file + ".sig");
     if(sigFile.exists()) //  && cmd_out.contains("[ErrorCode: 0x00000000]")
     {
