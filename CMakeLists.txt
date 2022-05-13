@@ -29,6 +29,8 @@ set(PROJECT_SOURCES
         resources.qrc
         my_tablewidget.cpp
         my_tablewidget.h
+        previewwidget.h
+        previewwidget.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

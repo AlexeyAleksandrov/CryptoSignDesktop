@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QPainter>
 #include "documnetsigncreator.h"
 #include <QDesktopServices>
 
@@ -437,6 +438,45 @@ void MainWindow::on_comboBox_certificates_currentIndexChanged(int index)
     ui->label_signNameValue->setText(currentSign.name);
     ui->label_signConfirmDatesValue->setText("c " + currentSign.startDate.toString("dd.MM.yyyy") + " до " + currentSign.finishDate.toString("dd.MM.yyyy"));
     ui->label_signOwnerValue->setText(currentSign.subname);
+
+    if (ui->radioButton_displayName->isChecked())
+    {
+        ui->label_priviewOwner->setText("Владелец: " + currentSign.subname);
+    }
+    else
+    {
+        ui->label_priviewOwner->setText("Владелец: " + currentSign.name);
+    }
+    ui->label_priviewCertificate->setText("Сертификат: " +currentSign.serial);
+    ui->label_priviewDateFromTo->setText("Действителен c " + currentSign.startDate.toString("dd.MM.yyyy") + " до " + currentSign.finishDate.toString("dd.MM.yyyy"));
+
+    QImage img(ui->widget_preview->size(), QImage::Format_ARGB32_Premultiplied);
+    QPainter paiter(&img);
+
+    QPen pen;
+    pen.setColor(Qt::white);
+    QBrush style;
+    style.setStyle(Qt::SolidPattern);
+    style.setColor(Qt::white);
+    paiter.setPen(pen);
+    paiter.setBrush(style);
+
+    paiter.drawRect(0,0,384,160);
+
+    pen.setColor(Qt::black);
+    pen.setWidth(3);
+
+    paiter.setPen(pen);
+
+    paiter.drawRoundRect(10, 10, 384 - 20, 160 - 20, 3, 3);
+
+
+
+    ui->widget_preview->setImg(img);
+    ui->widget_preview->repaint();
+
+
+
 }
 
 void MainWindow::on_toolButton_searchCertificate_clicked()
