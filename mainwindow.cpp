@@ -259,6 +259,130 @@ void MainWindow::runFile(QString file)
     QDesktopServices::openUrl(QUrl("file:" + file));
 }
 
+QString MainWindow::getFileProperty(int i, fileProperty fileProperty)
+{
+    if (i < 0)
+    {
+        qDebug() << "MainWindow::getFileProperty: Индекс файла не может быть меньше 0 " << i;
+        log << "MainWindow::getFileProperty: Индекс файла не может быть меньше 0 " << i;
+        return "";
+    }
+
+    int rowsCount = ui->tableWidget_files->rowCount();
+
+    if(i >= rowsCount)
+    {
+        qDebug() << "MainWindow::getFileProperty: Индекс файла не существует " << i;
+        log << "MainWindow::getFileProperty: Индекс файла не существует " << i;
+        return "";
+    }
+
+    QTableWidgetItem *item = ui->tableWidget_files->item(i, 0);
+    if(item == nullptr)
+    {
+        qDebug() << "MainWindow::getFileProperty: Ячейка файла не существует " << i;
+        log << "MainWindow::getFileProperty: Ячейка файла не существует " << i;
+        return "";
+    }
+
+    QString itemToolTip = item->toolTip();
+
+    if(!itemToolTip.contains("|"))
+    {
+        qDebug() << "MainWindow::getFileProperty: Ошибка форматирования ячейки файла " << i;
+        log << "MainWindow::getFileProperty: Ошибка форматирования ячейки файла " << i;
+        return "";
+    }
+
+    QStringList list = itemToolTip.split("|");   // делаем разбивку
+
+    if(list.size() <= fileProperty)
+    {
+        qDebug() << "MainWindow::getFileProperty: Ошибка форматирования списка ячейки файла " << i;
+        log << "MainWindow::getFileProperty: Ошибка форматирования списка ячейки файла " << i;
+        return "";
+    }
+
+    return list.at(fileProperty);  // возвращаем первое значение
+}
+
+void MainWindow::setFileProperty(int i, fileProperty fileProperty, QString value)
+{
+    if (i < 0)
+    {
+        qDebug() << "MainWindow::getFileProperty: Индекс файла не может быть меньше 0 " << i;
+        log << "MainWindow::getFileProperty: Индекс файла не может быть меньше 0 " << i;
+        return;
+    }
+
+    int rowsCount = ui->tableWidget_files->rowCount();
+
+    if(i >= rowsCount)
+    {
+        qDebug() << "MainWindow::getFileProperty: Индекс файла не существует " << i;
+        log << "MainWindow::getFileProperty: Индекс файла не существует " << i;
+        return;
+    }
+
+    QTableWidgetItem *item = ui->tableWidget_files->item(i, 0);
+    if(item == nullptr)
+    {
+        qDebug() << "MainWindow::getFileProperty: Ячейка файла не существует " << i;
+        log << "MainWindow::getFileProperty: Ячейка файла не существует " << i;
+        return;
+    }
+
+    QString itemToolTip = item->toolTip();
+    QStringList propertiesList;
+
+    if(itemToolTip.contains("|"))
+    {
+        propertiesList = itemToolTip.split("|");   // делаем разбивку
+    }
+    else
+    {
+        int size = 2;   // на всякий случай
+        for(int i=0; i<size; i++)
+        {
+            propertiesList.append("");
+        }
+    }
+
+    propertiesList[fileProperty] = value;
+
+    QString propertyString;
+    for(int i=0; i<propertiesList.size(); i++)
+    {
+        if(i != 0)
+        {
+            propertyString.append("|");
+        }
+        propertyString.append(propertiesList.at(i));
+    }
+
+    item->setToolTip(propertyString);
+}
+
+QString MainWindow::getSourceFileName(int i)
+{
+    return getFileProperty(i, SOURCE_FILE);
+}
+
+QString MainWindow::getSignFileName(int i)
+{
+    return getFileProperty(i, SIGN_FILE);
+}
+
+void MainWindow::setSourceFileName(int i, QString fileName)
+{
+    setFileProperty(i, SOURCE_FILE, fileName);
+}
+
+void MainWindow::setSignFileName(int i, QString fileName)
+{
+    setFileProperty(i, SIGN_FILE, fileName);
+}
+
 void MainWindow::on_pushButton_filesAdd_clicked()
 {
     QStringList files = QFileDialog::getOpenFileNames(this, tr("Open File"),
@@ -384,7 +508,8 @@ void MainWindow::on_pushButton_createSign_clicked()
         QString inputFile;
         QString outputFile;
 
-        inputFile = ui->tableWidget_files->item(i, 0)->toolTip();   // обрабатываемый файл
+//        inputFile = ui->tableWidget_files->item(i, 0)->toolTip();   // обрабатываемый файл
+        inputFile = getSourceFileName(i);
         outputFile = outputDir + "/" + QFileInfo(inputFile).fileName(); // файл на выходе
         outputFile = getFileNameInPDFFormat(outputFile);    // конвертируем название в PDF
 
@@ -399,6 +524,7 @@ void MainWindow::on_pushButton_createSign_clicked()
         if(signCreated)
         {
             setFileStatus(i, READY);
+            setSignFileName(i, outputFile);
         }
         else
         {
@@ -490,7 +616,8 @@ void MainWindow::on_toolButton_searchCertificate_clicked()
 void MainWindow::on_tableWidget_files_itemDoubleClicked(QTableWidgetItem *item)
 {
     int row = item->row();
-    QString sourceFile = ui->tableWidget_files->item(row, 0)->toolTip();    // получаем путь исходного файла
+//    QString sourceFile = ui->tableWidget_files->item(row, 0)->toolTip();    // получаем путь исходного файла
+    QString sourceFile = getSourceFileName(row);
     runFile(sourceFile);
 }
 
@@ -523,7 +650,9 @@ void MainWindow::addFiles(QStringList files)
         bool contains = false;
         for(int i=0; i<rows; i++)
         {
-            if(ui->tableWidget_files->item(i, 0)->toolTip() == file)
+//            if(ui->tableWidget_files->item(i, 0)->toolTip() == file)
+            QString sourceFileName = getSourceFileName(i);
+            if(sourceFileName == file)
             {
                 contains = true;
                 break;
@@ -543,9 +672,11 @@ void MainWindow::addFiles(QStringList files)
         QString filename = QFileInfo(file).fileName();
         QTableWidgetItem *item = new QTableWidgetItem;
         item->setText(filename);
-        item->setToolTip(file); // записываем полный путь к файлу в toolTip
+//        item->setToolTip(file); // записываем полный путь к файлу в toolTip
 
         ui->tableWidget_files->setItem(rows, 0, item);    // задаем ячейку
+
+        setSourceFileName(rows, file);
     }
     QStringList tableHorizontalLabels;
     tableHorizontalLabels << "Файлы" << "Состояние";
@@ -679,7 +810,7 @@ QString MainWindow::getFileDirByIndex(int index)
     QTableWidgetItem *item = ui->tableWidget_files->item(index, 0);
     if(item != nullptr)
     {
-        return item->toolTip();
+        return getSourceFileName(index);
     }
     else
     {
