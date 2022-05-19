@@ -8,12 +8,17 @@
 #include <QPainter>
 #include "documnetsigncreator.h"
 #include <QDesktopServices>
+#include <logger.h>
+
+//#define qDebug Logger
+#define log Logger()
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     cryptoPro.setCryptoProDirectory(CRYPTO_PRO_DIRECTORY);
     ui->tableWidget_files->setColumnCount(2);
     ui->radioButton_displayLabel->setChecked(true);
@@ -42,7 +47,8 @@ void MainWindow::loadProgramData()
     bool isOpen = saveFile.open(QIODevice::ReadOnly);
     if(!isOpen)
     {
-        qDebug() << "Не удалось прочитать настройки программы. Не удалось открыть файл";
+        qDebug() << "MainWindow::loadProgramData(): Не удалось прочитать настройки программы. Не удалось открыть файл";
+        log << "MainWindow::loadProgramData(): Не удалось прочитать настройки программы. Не удалось открыть файл";
         return;
     }
 
@@ -116,7 +122,8 @@ void MainWindow::saveProgramData()
     bool isOpen = saveFile.open(QIODevice::WriteOnly);
     if(!isOpen)
     {
-        qDebug() << "Не удалось сохранить настройки программы. Не удалось открыть файл";
+        qDebug() << "MainWindow::saveProgramData(): Не удалось сохранить настройки программы. Не удалось открыть файл";
+        log << "MainWindow::saveProgramData(): Не удалось сохранить настройки программы. Не удалось открыть файл";
         return;
     }
 
@@ -142,7 +149,7 @@ void MainWindow::updateCertificatesList()
         {
             name = "-";
         }
-        //        qDebug() << "name = " << name << "subname = " << subname << "nameOrSubjectState = " << nameOrSubjectState;
+                qDebug() << "name = " << name << "subname = " << subname << "nameOrSubjectState = ";
         int nameOrSubjectState = ui->radioButton_displayName->isChecked();
         switch (nameOrSubjectState)
         {
@@ -172,7 +179,8 @@ CryptoPRO_CSP::CryptoSignData MainWindow::getCurrentSign()
     }
     else
     {
-        qDebug() << "Не удалось получить текущую подпись. Некооректный индекс. Всего подписей: " << sertList.size() << " индекс = " << currentIndex;
+        qDebug() << "MainWindow::getCurrentSign(): Не удалось получить текущую подпись. Некооректный индекс. Всего подписей: " << sertList.size() << " индекс = " << currentIndex;
+        log << "MainWindow::getCurrentSign(): Не удалось получить текущую подпись. Некооректный индекс. Всего подписей: " << sertList.size() << " индекс = " << currentIndex;
         return CryptoPRO_CSP::CryptoSignData(); // возвращаем пустой результат
     }
 }
@@ -184,7 +192,8 @@ void MainWindow::setFileStatus(int i, fileStatus status)
 
     if(itemFile == nullptr || itemStatus == nullptr)
     {
-        qDebug() << "Невозможно установить статус файлу " << i;
+        qDebug() << "MainWindow::setFileStatus: Невозможно установить статус файлу " << i;
+        log << "MainWindow::setFileStatus: Невозможно установить статус файлу " << i;
         QApplication::processEvents();
         return;
     }
@@ -227,6 +236,8 @@ void MainWindow::setFileStatus(int i, fileStatus status)
     itemStatus->setBackground(color);
     itemStatus->setText(text);
 
+    log << "Файлу" << itemFile->toolTip() << " установлен статус " << text;
+
     QApplication::processEvents();
     QApplication::processEvents();
     QApplication::processEvents();
@@ -247,22 +258,6 @@ void MainWindow::runFile(QString file)
 {
     QDesktopServices::openUrl(QUrl("file:" + file));
 }
-
-
-//void MainWindow::on_pushButton_clicked()
-//{
-//    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-//                                                    "/home",
-//                                                    tr("Documents (*.docx *.doc *.rtf)"));
-
-//    QFile file(fileName);
-//    file.open(QIODevice::WriteOnly);
-//    file.write("кириллица в файле");
-//    file.close();
-
-//    qDebug() << "Готово!";
-//}
-
 
 void MainWindow::on_pushButton_filesAdd_clicked()
 {
@@ -301,6 +296,7 @@ void MainWindow::on_pushButton_createSign_clicked()
     if(ui->pushButton_createSign->text() == "Отмена")
     {
         signProcessNeedCancel = true;
+        log << "Отменяем процесс подписи";
         QApplication::processEvents();  // заставляем программу это обработать
         return;
     }
@@ -309,7 +305,7 @@ void MainWindow::on_pushButton_createSign_clicked()
     QString outputDir = ui->lineEdit_outputDir->text();
     if(filesCount == 0)
     {
-        QMessageBox::warning(this, "Ошибка", "Вы не доабвили ни одного файла!");
+        QMessageBox::warning(this, "Ошибка", "Вы не добавили ни одного файла!");
         return;
     }
 
@@ -474,9 +470,6 @@ void MainWindow::on_comboBox_certificates_currentIndexChanged(int index)
 
     ui->widget_preview->setImg(img);
     ui->widget_preview->repaint();
-
-
-
 }
 
 void MainWindow::on_toolButton_searchCertificate_clicked()

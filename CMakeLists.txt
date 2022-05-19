@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
         my_tablewidget.h
         previewwidget.h
         previewwidget.cpp
+        logger.cpp
+        logger.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
