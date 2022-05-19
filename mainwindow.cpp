@@ -512,6 +512,7 @@ void MainWindow::on_pushButton_createSign_clicked()
         inputFile = getSourceFileName(i);
         outputFile = outputDir + "/" + QFileInfo(inputFile).fileName(); // файл на выходе
         outputFile = getFileNameInPDFFormat(outputFile);    // конвертируем название в PDF
+//        setSignFileName(i, outputFile);
 
         bool result = docSignCreator.processDocument(inputFile, outputFile);  // выполняем обработку
         if(!result)
@@ -745,9 +746,16 @@ void MainWindow::filesTableMouseRightClick(QTableWidgetItem *item)
     {
 //        fileToolTip fileData = getFileToolTip(item->row()); // получаем tooltip файла
         QString fileName = getFileDirByIndex(item->row());
+        QString signFileName = getSignFileName(item->row());
 
         QAction *menuOpenFileAction = menu.addAction("Открыть " + QFileInfo(fileName).fileName());
         QObject::connect(menuOpenFileAction, &QAction::triggered, this, [this, fileName]() { runFile(fileName); });
+
+        if(!signFileName.isEmpty())
+        {
+            QAction *menuOpenFileAction = menu.addAction("Открыть " + QFileInfo(signFileName).fileName());
+            QObject::connect(menuOpenFileAction, &QAction::triggered, this, [this, signFileName]() { runFile(signFileName); });
+        }
 
 //        if(fileData.signedFile != "")
 //        {
