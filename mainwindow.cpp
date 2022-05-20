@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     cryptoPro.setCryptoProDirectory(CRYPTO_PRO_DIRECTORY);
     ui->tableWidget_files->setColumnCount(2);
     ui->radioButton_displayLabel->setChecked(true);
+    on_checkBox_drawLogo_stateChanged(0);
 
     updateCertificatesList();   // загружаем список сертификатов
     loadProgramData();  // загружаем данные программы
@@ -33,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     QStringList tableHorizontalLabels;
     tableHorizontalLabels << "Файлы" << "Состояние";
     ui->tableWidget_files->setHorizontalHeaderLabels(tableHorizontalLabels);
+
 }
 
 MainWindow::~MainWindow()
@@ -84,6 +86,7 @@ void MainWindow::loadProgramData()
 
     ui->lineEdit_outputDir->setText(outputDir);
     ui->checkBox_drawLogo->setChecked(drawLogo);
+    on_checkBox_drawLogo_stateChanged(drawLogo);
 
     if(displayName)
     {
@@ -452,8 +455,9 @@ void MainWindow::on_pushButton_createSign_clicked()
         return;
     }
 
+    int signType = ui->comboBox_signType->currentIndex();
     bool detached = false;  // отсоединённая подпись
-    if(ui->comboBox_signType->currentIndex() == SIGN_TYPE_DETACHED)
+    if(signType == SIGN_TYPE_DETACHED)
     {
         detached = true;
     }
@@ -521,6 +525,13 @@ void MainWindow::on_pushButton_createSign_clicked()
             continue;
         }
 
+        if(signType == SIGN_TYPE_NONE)  // если не нужно генерировать sig подписи
+        {
+            setFileStatus(i, READY);
+            setSignFileName(i, outputFile);
+            continue;
+        }
+
         bool signCreated = cryptoPro.csptest.createSign(outputFile, currentSign, detached, base64);   // создаём подпись к файлу
         if(signCreated)
         {
@@ -572,31 +583,6 @@ void MainWindow::on_comboBox_certificates_currentIndexChanged(int index)
     }
     ui->label_priviewCertificate->setText("Сертификат: " +currentSign.serial);
     ui->label_priviewDateFromTo->setText("Действителен c " + currentSign.startDate.toString("dd.MM.yyyy") + " до " + currentSign.finishDate.toString("dd.MM.yyyy"));
-
-    QImage img(ui->widget_preview->size(), QImage::Format_ARGB32_Premultiplied);
-    QPainter paiter(&img);
-
-    QPen pen;
-    pen.setColor(Qt::white);
-    QBrush style;
-    style.setStyle(Qt::SolidPattern);
-    style.setColor(Qt::white);
-    paiter.setPen(pen);
-    paiter.setBrush(style);
-
-    paiter.drawRect(0,0,384,160);
-
-    pen.setColor(Qt::black);
-    pen.setWidth(3);
-
-    paiter.setPen(pen);
-
-    paiter.drawRoundRect(10, 10, 384 - 20, 160 - 20, 3, 3);
-
-
-
-    ui->widget_preview->setImg(img);
-    ui->widget_preview->repaint();
 }
 
 void MainWindow::on_toolButton_searchCertificate_clicked()
@@ -858,5 +844,24 @@ void MainWindow::on_toolButton_signInsertTypeInfo_clicked()
                    "\n"
                    "Обратите внимание: Количество тэгов в одном документе неограничено. Каждая ячейка таблицы, содержащая текст, будет заменена в соотвествии с информацией, полученной с сертификата подписи.";
     QMessageBox::information(this, "", text);
+}
+
+
+void MainWindow::on_checkBox_drawLogo_stateChanged(int arg1)
+{
+    QImage img(ui->widget_preview->size(), QImage::Format_ARGB32_Premultiplied);
+    QPainter painter(&img);
+
+    if(arg1 == 0)
+    {
+        painter.drawImage(0, 0, QImage(":/resources/image_without_gerb_384_160.jpg"));
+    }
+    else
+    {
+        painter.drawImage(0, 0, QImage(":/resources/image_gerb_384_160.jpg"));
+    }
+
+    ui->widget_preview->setImg(img);
+    ui->widget_preview->repaint();
 }
 

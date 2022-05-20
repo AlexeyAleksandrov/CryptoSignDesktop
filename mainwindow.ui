@@ -108,74 +108,11 @@
           <string>Создание подписи</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="7" column="0">
-           <widget class="QLabel" name="label_outputDir">
+          <item row="8" column="1" colspan="2">
+           <widget class="QPushButton" name="pushButton_createSign">
             <property name="text">
-             <string>Папка вывода</string>
+             <string>Подписать</string>
             </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox_insertType">
-            <item>
-             <property name="text">
-              <string>В конец документа</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>По тэгу</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="7" column="1" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_outputDir">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1" colspan="3">
-           <widget class="QCheckBox" name="checkBox_drawLogo">
-            <property name="text">
-             <string>Рисовать герб</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox_signType">
-            <item>
-             <property name="text">
-              <string>Отсоединённая</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Присоединённая</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_insertType">
-            <property name="text">
-             <string>Тип вставки</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox_signFormat">
-            <item>
-             <property name="text">
-              <string>DER</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>base64</string>
-             </property>
-            </item>
            </widget>
           </item>
           <item row="3" column="0">
@@ -185,17 +122,10 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_drawLogo">
-            <property name="text">
-             <string>Герб:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1" colspan="2">
-           <widget class="QPushButton" name="pushButton_createSign">
-            <property name="text">
-             <string>Подписать</string>
+          <item row="7" column="1" colspan="2">
+           <widget class="QLineEdit" name="lineEdit_outputDir">
+            <property name="readOnly">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -203,6 +133,20 @@
            <widget class="QLabel" name="label_signFormat">
             <property name="text">
              <string>Формат</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_insertType">
+            <property name="text">
+             <string>Тип вставки</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="3">
+           <widget class="QCheckBox" name="checkBox_drawLogo">
+            <property name="text">
+             <string>Рисовать герб</string>
             </property>
            </widget>
           </item>
@@ -226,6 +170,67 @@
              <iconset resource="resources.qrc">
               <normaloff>:/resources/folder.png</normaloff>:/resources/folder.png</iconset>
             </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_drawLogo">
+            <property name="text">
+             <string>Герб:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QComboBox" name="comboBox_signType">
+            <item>
+             <property name="text">
+              <string>Отсоединённая</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Присоединённая</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Нет (демо)</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_outputDir">
+            <property name="text">
+             <string>Папка вывода</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <widget class="QComboBox" name="comboBox_insertType">
+            <item>
+             <property name="text">
+              <string>В конец документа</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>По тэгу</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="4" column="1" colspan="2">
+           <widget class="QComboBox" name="comboBox_signFormat">
+            <item>
+             <property name="text">
+              <string>DER</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>base64</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>

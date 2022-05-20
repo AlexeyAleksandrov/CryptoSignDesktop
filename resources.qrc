@@ -8,5 +8,7 @@
         <file>resources/MIREA_Gerb_Colour.png</file>
         <file>resources/info.png</file>
         <file>resources/folder.png</file>
+        <file>resources/image_gerb_384_160.jpg</file>
+        <file>resources/image_without_gerb_384_160.jpg</file>
     </qresource>
 </RCC>

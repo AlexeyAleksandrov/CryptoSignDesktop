@@ -20,6 +20,7 @@
 
 #define SIGN_TYPE_DETACHED 0
 #define SIGN_TYPE_ATTACHED 1
+#define SIGN_TYPE_NONE 2
 
 #define SIGN_FORMAT_DER 0
 #define SIGN_FORMAT_BASE64 1
@@ -97,6 +98,8 @@ private slots:
     void on_toolButton_choseOutputDir_clicked();
 
     void on_toolButton_signInsertTypeInfo_clicked();
+
+    void on_checkBox_drawLogo_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
