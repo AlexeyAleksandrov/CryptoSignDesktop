@@ -46,6 +46,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::loadProgramData()
 {
+    log << "Загрузка параметров программы";
     QFile saveFile("settings.json");
     bool isOpen = saveFile.open(QIODevice::ReadOnly);
     if(!isOpen)
@@ -104,6 +105,7 @@ void MainWindow::loadProgramData()
 
 void MainWindow::saveProgramData()
 {
+    log << "Сохранение параметров программы";
     QJsonDocument jsonDocument;
     QJsonObject jsonObject;
 
@@ -137,6 +139,7 @@ void MainWindow::saveProgramData()
 
 void MainWindow::updateCertificatesList()
 {
+    log << "Обновление списка сертификатов";
     int currentIndex = ui->comboBox_certificates->currentIndex();
 
     auto signsList = cryptoPro.certmgr.getSertifactesList();
@@ -153,7 +156,7 @@ void MainWindow::updateCertificatesList()
         {
             name = "-";
         }
-                qDebug() << "name = " << name << "subname = " << subname << "nameOrSubjectState = ";
+        qDebug() << "name = " << name << "subname = " << subname << "nameOrSubjectState = ";
         int nameOrSubjectState = ui->radioButton_displayName->isChecked();
         switch (nameOrSubjectState)
         {
@@ -260,6 +263,7 @@ QString MainWindow::getFileNameInPDFFormat(QString fileName)
 
 void MainWindow::runFile(QString file)
 {
+    log << "Запуск файла " << file;
     QDesktopServices::openUrl(QUrl("file:" + file));
 }
 
@@ -612,6 +616,7 @@ void MainWindow::on_tableWidget_files_itemDoubleClicked(QTableWidgetItem *item)
 void MainWindow::addFiles(QStringList files)
 {
     qDebug() << "Добавляемые файлы: " << files;
+    log << "Добавляемые файлы: " << files;
 
     QStringList allowFileExtends;   // разрешённые расширения файлов
     allowFileExtends << ".docx" << ".doc" << ".rtf" << ".pdf" << ".xlsx" << ".xls";
@@ -665,6 +670,8 @@ void MainWindow::addFiles(QStringList files)
         ui->tableWidget_files->setItem(rows, 0, item);    // задаем ячейку
 
         setSourceFileName(rows, file);
+
+        log << "Добавлен файл: " << file;
     }
     QStringList tableHorizontalLabels;
     tableHorizontalLabels << "Файлы" << "Состояние";
@@ -692,6 +699,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 void MainWindow::filesTableMouseRightClick(QTableWidgetItem *item)
 {
+    log << "Открыто контекстное меню";
     QMenu menu;
 
     // добавление файлов и папок
@@ -850,6 +858,7 @@ void MainWindow::on_toolButton_signInsertTypeInfo_clicked()
 
 void MainWindow::on_checkBox_drawLogo_stateChanged(int arg1)
 {
+    log << "Изменно состояние отрисовки герба: " << ((arg1 == 0) ? "False" : "True");
     QImage img(ui->widget_preview->size(), QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&img);
 

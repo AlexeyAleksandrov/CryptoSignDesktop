@@ -72,7 +72,7 @@ Logger Logger::operator <<(QVariant var)
         out << Qt::reset << Qt::flush;
     }
 
-    qDebug() << "Запись " << var;
+//    qDebug() << "Запись " << var;
     writeToFile(var.toString());
     return *this;
 }

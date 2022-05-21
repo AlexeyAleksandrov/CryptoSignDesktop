@@ -9,6 +9,8 @@
 #include <QThread>
 
 //#include "logclass.h"
+#include "logger.h"
+#define log Logger()
 
 #ifdef __linux__
     #define CRYPTO_PRO_DIRECTORY "/opt/cprocsp/bin/amd64/"

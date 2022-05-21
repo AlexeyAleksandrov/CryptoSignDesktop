@@ -5,6 +5,9 @@
 #include <QFile>
 #include <QDebug>
 
+#include "logger.h"
+#define log Logger()
+
 class DocumnetSignCreator
 {
 public:

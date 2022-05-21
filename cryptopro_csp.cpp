@@ -45,6 +45,7 @@ QString CryptoPRO_CSP::s_certmgr::getConsoleText(QStringList options)
 {
     // запускаем процесс
     //log.addToLog("запускаем процесс certmgr");
+    log << "запускаем процесс certmgr";
     QProcess certmgr_process;
     certmgr_process.setReadChannel(QProcess::StandardOutput);
 
@@ -55,6 +56,7 @@ QString CryptoPRO_CSP::s_certmgr::getConsoleText(QStringList options)
     {
         qDebug() << "The process didn't start" << certmgr_process.error();
         //log.addToLog(&"The process didn't start " [ certmgr_process.error()]);
+        log << "The process didn't start" << certmgr_process.error();
         return "";
     }
 
@@ -65,6 +67,7 @@ QString CryptoPRO_CSP::s_certmgr::getConsoleText(QStringList options)
         if(!certmgr_process.waitForReadyRead()) // ждём доступа на чтение
         {
             qDebug() << "Поток не открыл доступ на чтение!";
+            log << "Поток не открыл доступ на чтение!";
             //log.addToLog("Поток не открыл доступ на чтение!");
             return "";
         }
@@ -85,6 +88,7 @@ QString CryptoPRO_CSP::s_certmgr::getConsoleText(QStringList options)
     if(!certmgr_process.waitForFinished())
     {
         qDebug() << "The process didn't finished" << certmgr_process.error();
+        log << "The process didn't finished" << certmgr_process.error();
         //log.addToLog(&"The process didn't finished " [ certmgr_process.error()]);
         return "";
     }
@@ -98,6 +102,7 @@ QString CryptoPRO_CSP::s_certmgr::getConsoleText(QStringList options)
 QList<CryptoPRO_CSP::CryptoSignData>CryptoPRO_CSP::s_certmgr::getSertifactesList()
 {
     //log.addToLog("Запускаем процесс получения списка подписей");
+    log << "Запускаем процесс получения списка подписей";
     QString cmd_out = getConsoleText(QStringList() << "-list" << "-store" << "uMy");
 //    QString cmd_out;
 //    QFile filecmdout("C:/Users/ASUS/Desktop/cmd_out.txt");
@@ -302,6 +307,7 @@ QList<CryptoPRO_CSP::CryptoSignData>CryptoPRO_CSP::s_certmgr::getSertifactesList
         sign.index = getSignIndex(SignsList, sign); // получаем информацию об индексе
     }
     //log.addToLog("Список подписей сформирован. Количество: " + QString::number(SignsList.size()));
+    log << "Список подписей сформирован. Количество: " << SignsList.size();
     for (int i=0; i<SignsList.size(); i++)
     {
         auto sertVal = SignsList.at(i);
@@ -319,6 +325,7 @@ void CryptoPRO_CSP::s_certmgr::setCryptoProDirectory(const QString &value)
 bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSignData sign, bool detached, bool base64)
 {
     //log.addToLog("Запускатся процесс подписи файла " + file);
+    log << "Запускатся процесс подписи файла " << file;
 
 //    qDebug() << "sign runfile = " << runfile << " csptest = " << CRYPTO_PRO_DIRECTORY;
     QStringList params = QStringList() << file << QString::number(sign.index) << sign.email; 
@@ -379,6 +386,7 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     if(!QFile::exists(filebatDir))
     {
         qDebug() << "File not found" << filebatDir;
+        log << "Файл не найден " << filebatDir;
         //log.addToLog("Файл не найден " + filebatDir);
         return false;
     }
@@ -389,6 +397,7 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     if(!QFile::exists(file))
     {
         qDebug() << "File for sign not found " + file;
+        log << "Файл для подписи не найден " << file;
         //log.addToLog("Файл для подписи не найден " + file);
         return false;
     }
@@ -398,6 +407,7 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
 //    }
 
     qDebug() << "Запускаем процесс подписи: " + csptest_bat_file.fileName() + " " + params[0] + " " + params[1] + " " + params[2];
+    log << "Запускаем процесс подписи: " + csptest_bat_file.fileName() + " " + params[0] + " " + params[1] + " " + params[2];
     //log.addToLog("Запускаем процесс подписи: " + csptest_bat_file.fileName() + params[0] + " " + params[1] + " " + params[2]);
 
 #ifdef _WIN32
@@ -419,6 +429,7 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     if (!csptest_bat.waitForStarted(120000))
     {
         qDebug() << "The process didnt start" << csptest_bat.error();
+        log << "The process didnt start" << csptest_bat.error();
         //log.addToLog(&"The process didnt start " [ csptest_bat.error()]);
 //        csptest_bat_file.remove();
         return false;
@@ -437,6 +448,7 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     if (!csptest_bat.waitForFinished())
     {
         qDebug() << "The process didnt finished" << csptest_bat.error();
+        log << "The process didnt finished" << csptest_bat.error();
         //log.addToLog(&"The process didnt finished " [ csptest_bat.error()]);
 //        csptest_bat_file.remove();
         return false;
@@ -447,12 +459,14 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     if(sigFile.exists() && cmd_out.contains("[ErrorCode: 0x00000000]")) //  && cmd_out.contains("[ErrorCode: 0x00000000]")
     {
         qDebug() << "Singature succesfull created " + sigFile.fileName();
+        log << "Подпись успешно создана " + sigFile.fileName();
         //log.addToLog("Подпись успешно создана " + sigFile.fileName());
         return true;
     }
     else
     {
         qDebug() << "Failed to create singature - file not found " + sigFile.fileName();
+        log "Не удалось создать подпись - файл не найден " + sigFile.fileName();
         //log.addToLog("Не удалось создать подпись - файл не найден " + sigFile.fileName());
         return false;
     }
@@ -464,12 +478,14 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     if(sigFile.exists()) //  && cmd_out.contains("[ErrorCode: 0x00000000]")
     {
         qDebug() << "Singature succesfull created " + sigFile.fileName();
+        log << "Подпись успешно создана " << sigFile.fileName();
         //log.addToLog("Подпись успешно создана " + sigFile.fileName());
         return true;
     }
     else
     {
         qDebug() << "Failed to create singature - file not found " + sigFile.fileName();
+        log << "Не удалось создать подпись - файл не найден " << sigFile.fileName();
         //log.addToLog("Не удалось создать подпись - файл не найден " + sigFile.fileName());
         return false;
     }

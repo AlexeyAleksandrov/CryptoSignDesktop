@@ -12,18 +12,21 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
     if(!QFile::exists(fileInput))
     {
         qDebug() << QString::fromLocal8Bit("Файл для подписи не найден! ") + fileInput;
+        log << QString::fromLocal8Bit("Файл для подписи не найден! ") + fileInput;
         return false;
     }
 
     if(jarFileName.isEmpty() || !QFile::exists(jarFileName))
     {
         qDebug() << QString::fromLocal8Bit("Файл запуска JAR не найден!");
+        log << QString::fromLocal8Bit("Файл запуска JAR не найден!");
         return false;
     }
 
     if(!fileOutput.endsWith(".pdf"))
     {
         qDebug() << QString::fromLocal8Bit("Выходной файл должен быть формата *.pdf ") + fileOutput;
+        log << QString::fromLocal8Bit("Выходной файл должен быть формата *.pdf ") + fileOutput;
         return false;
     }
 
@@ -59,6 +62,7 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
     if(!started)
     {
         qDebug() << QString::fromLocal8Bit("Не удалось запустить программу");
+        log << QString::fromLocal8Bit("Не удалось запустить программу");
         return false;
     }
 
@@ -67,6 +71,7 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
     {
         process.terminate();    // принудительно завершаем процесс
         qDebug() << QString::fromLocal8Bit("Превышено время ожидания программы!");
+        log << QString::fromLocal8Bit("Превышено время ожидания программы!");
         return false;
     }
 
@@ -74,6 +79,7 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
     if(exitCode != 0)
     {
         qDebug() << QString::fromLocal8Bit("Процесс завершился с кодом ") << exitCode;
+        log << QString::fromLocal8Bit("Процесс завершился с кодом ") << exitCode;
 
         QString text = process.readAllStandardOutput();
 
@@ -89,6 +95,7 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
         for(auto &&line : error_list)
         {
             qDebug() << line;
+            log << line;
         }
 
         return false;
