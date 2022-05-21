@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>865</width>
-    <height>691</height>
+    <height>742</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -381,7 +381,7 @@
                <widget class="QLabel" name="label">
                 <property name="font">
                  <font>
-                  <pointsize>11</pointsize>
+                  <pointsize>12</pointsize>
                   <bold>true</bold>
                  </font>
                 </property>
@@ -393,18 +393,11 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_priviewCertificate">
-                <property name="text">
-                 <string>Сертификат:</string>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_2">
                 <property name="font">
                  <font>
-                  <pointsize>11</pointsize>
+                  <pointsize>12</pointsize>
                   <bold>true</bold>
                  </font>
                 </property>
@@ -416,17 +409,51 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_priviewDateFromTo">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Действителен:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
                <widget class="QLabel" name="label_priviewOwner">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>Владелец:</string>
                 </property>
                </widget>
               </item>
               <item row="4" column="0">
-               <widget class="QLabel" name="label_priviewDateFromTo">
+               <widget class="QLabel" name="label_priviewCertificate">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>Действителен:</string>
+                 <string>Сертификат:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_priviewSimple">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>TextLabel</string>
                 </property>
                </widget>
               </item>

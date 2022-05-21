@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableWidget_files->setColumnCount(2);
     ui->radioButton_displayLabel->setChecked(true);
     on_checkBox_drawLogo_stateChanged(0);
+    ui->label_priviewSimple->setText("");
 
     updateCertificatesList();   // загружаем список сертификатов
     loadProgramData();  // загружаем данные программы
