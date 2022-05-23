@@ -90,7 +90,7 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
         lineSplitter = "\r\n";
 #endif
 
-        QStringList error_list = text.split(lineSplitter, Qt::SkipEmptyParts);
+        QStringList error_list = text.split(lineSplitter, QString::SkipEmptyParts);
         qDebug() << "run_error_text = \r\n";  // выводим ошибку
         for(auto &&line : error_list)
         {

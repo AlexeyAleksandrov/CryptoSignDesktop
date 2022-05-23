@@ -66,10 +66,10 @@ Logger Logger::operator <<(QVariant var)
 
         if(!writed)  // если запись в этой строке уже была, то добавляем пробел
         {
-            out << Qt::endl;
+            out << endl;
         }
         out << var.toString();
-        out << Qt::reset << Qt::flush;
+        out << reset << flush;
     }
 
 //    qDebug() << "Запись " << var;
