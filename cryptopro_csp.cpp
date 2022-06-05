@@ -332,7 +332,17 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
 
 #ifdef _WIN32
     QFile csptest_bat_file(QDir::currentPath() + "/csptest_bat.bat");
-    QString bat_text = QString("echo %2 | \"") + runfile + QString("\" -sfsign -sign -detached -add -in %1 -out %1.sig -my %3"); // универсальный текст батника
+    QString bat_text = QString("echo %2 | \"") + runfile + QString("\" -sfsign -sign"); // универсальный текст батника
+    if(detached)
+    {
+        bat_text.append(" -detached");
+    }
+    if(base64)
+    {
+        bat_text.append(" -base64");
+    }
+    bat_text.append(QString(" -add -in %1 -out %1.sig -my %3"));
+
 #elif __linux__
     QFile csptest_bat_file(QDir::currentPath() + "/csptest_bat.sh");
     QString bat_text = QString("echo %2 | \"")+ runfile + QString("\" -sfsign -sign");
@@ -466,7 +476,7 @@ bool CryptoPRO_CSP::s_csptest::createSign(QString file, CryptoPRO_CSP::CryptoSig
     else
     {
         qDebug() << "Failed to create singature - file not found " + sigFile.fileName();
-        log "Не удалось создать подпись - файл не найден " + sigFile.fileName();
+        log << "Не удалось создать подпись - файл не найден " + sigFile.fileName();
         //log.addToLog("Не удалось создать подпись - файл не найден " + sigFile.fileName());
         return false;
     }

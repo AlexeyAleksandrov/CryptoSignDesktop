@@ -391,6 +391,19 @@ void MainWindow::setSignFileName(int i, QString fileName)
     setFileProperty(i, SIGN_FILE, fileName);
 }
 
+QString MainWindow::getPdfFileNameWithExistsIndex(QString fileName)
+{
+    int index = 1;  // индекс копии файла
+    QString tempFilename = fileName;  // временное название для поиска копий файла
+    while (QFile::exists(tempFilename))
+    {
+        tempFilename = fileName.remove(".pdf");
+        index++;
+        tempFilename.append("_" + QString::number(index) + ".pdf");
+    }
+    return tempFilename;
+}
+
 void MainWindow::on_pushButton_filesAdd_clicked()
 {
     QStringList files = QFileDialog::getOpenFileNames(this, tr("Open File"),
@@ -521,6 +534,7 @@ void MainWindow::on_pushButton_createSign_clicked()
         inputFile = getSourceFileName(i);
         outputFile = outputDir + "/" + QFileInfo(inputFile).fileName(); // файл на выходе
         outputFile = getFileNameInPDFFormat(outputFile);    // конвертируем название в PDF
+        outputFile = getPdfFileNameWithExistsIndex(outputFile);     // добавляем индекс к файлу, если он уже содержится
 //        setSignFileName(i, outputFile);
 
         bool result = docSignCreator.processDocument(inputFile, outputFile);  // выполняем обработку

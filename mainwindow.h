@@ -70,6 +70,7 @@ private:
     QString getSignFileName(int i); // получить путь к подписанному файлу по индексу
     void setSourceFileName(int i, QString fileName);    // установить исходный файл
     void setSignFileName(int i, QString fileName);  // установить файл подписи
+    QString getPdfFileNameWithExistsIndex(QString fileName);    // добавляет к названию файла индекс, если он уже существует в папке
 
 private slots:
 //    void on_pushButton_clicked();
