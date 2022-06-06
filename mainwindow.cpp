@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+#ifdef _WIN32
+    QFont font("Segoe UI", 10);
+    QApplication::setFont(font);
+#endif
+
     cryptoPro.setCryptoProDirectory(CRYPTO_PRO_DIRECTORY);
     ui->tableWidget_files->setColumnCount(2);
     ui->radioButton_displayLabel->setChecked(true);
