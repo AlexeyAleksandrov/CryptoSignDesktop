@@ -56,9 +56,13 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
 
     qDebug() << params;
 
+#ifdef _WIN32
     QString workingJarDirectory = QFileInfo(jarFileName).absolutePath();
     qDebug() << "workingJarDirectory = " << workingJarDirectory;
+    log << "workingJarDirectory = " << workingJarDirectory;
     process.setWorkingDirectory(workingJarDirectory);
+#endif
+
     process.setArguments(params);
     process.setReadChannel(QProcess::StandardOutput);
     process.start();
