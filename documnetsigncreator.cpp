@@ -1,5 +1,6 @@
 #include "documnetsigncreator.h"
 
+#include <QFileInfo>
 #include <QTextCodec>
 
 DocumnetSignCreator::DocumnetSignCreator()
@@ -55,6 +56,9 @@ bool DocumnetSignCreator::processDocument(QString fileInput, QString fileOutput)
 
     qDebug() << params;
 
+    QString workingJarDirectory = QFileInfo(jarFileName).absolutePath();
+    qDebug() << "workingJarDirectory = " << workingJarDirectory;
+    process.setWorkingDirectory(workingJarDirectory);
     process.setArguments(params);
     process.setReadChannel(QProcess::StandardOutput);
     process.start();
