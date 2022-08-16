@@ -461,6 +461,19 @@
             </widget>
            </widget>
           </item>
+          <item row="6" column="4">
+           <widget class="QToolButton" name="toolButton_system">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

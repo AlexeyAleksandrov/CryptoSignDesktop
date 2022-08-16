@@ -10,6 +10,9 @@
 #include <QDesktopServices>
 #include <logger.h>
 
+#define SETTINGS_PASSWORD "oozioozi21" // worker21
+#define SETTINGS_PASSWORD_RU "щщяшщщяш21" // worker21
+
 //#define qDebug Logger
 #define log Logger()
 
@@ -147,9 +150,11 @@ void MainWindow::updateCertificatesList()
     log << "Обновление списка сертификатов";
     int currentIndex = ui->comboBox_certificates->currentIndex();
 
-    auto signsList = cryptoPro.certmgr.getSertifactesList();
+//    auto signsList = cryptoPro.certmgr.getSertifactesList();
+    sertList = cryptoPro.certmgr.getSertifactesList();
+    ui->comboBox_certificates->clear();
     QStringList signsData;
-    for(auto sign : signsList)
+    for(auto sign : sertList)
     {
         QString name = sign.name;
         QString subname = sign.subname;
@@ -179,11 +184,12 @@ void MainWindow::updateCertificatesList()
     }
 
     ui->comboBox_certificates->addItems(signsData);
+    ui->comboBox_certificates->setCurrentIndex(currentIndex);
 }
 
 CryptoPRO_CSP::CryptoSignData MainWindow::getCurrentSign()
 {
-    auto sertList = cryptoPro.certmgr.getSertifactesList();
+//    auto sertList = cryptoPro.certmgr.getSertifactesList();
     int currentIndex = ui->comboBox_certificates->currentIndex();
     if(sertList.size() > currentIndex && currentIndex >= 0)
     {
@@ -892,5 +898,77 @@ void MainWindow::on_checkBox_drawLogo_stateChanged(int arg1)
 
     ui->widget_preview->setImg(img);
     ui->widget_preview->repaint();
+}
+
+
+void MainWindow::on_radioButton_displayName_clicked()
+{
+    auto currentSign = getCurrentSign();
+
+    if (ui->radioButton_displayName->isChecked())
+    {
+        ui->label_priviewOwner->setText("Владелец: " + currentSign.subname);
+    }
+    else
+    {
+        ui->label_priviewOwner->setText("Владелец: " + currentSign.name);
+    }
+
+    updateCertificatesList();
+}
+
+
+void MainWindow::on_radioButton_displayLabel_clicked()
+{
+    auto currentSign = getCurrentSign();
+
+    if (ui->radioButton_displayName->isChecked())
+    {
+        ui->label_priviewOwner->setText("Владелец: " + currentSign.subname);
+    }
+    else
+    {
+        ui->label_priviewOwner->setText("Владелец: " + currentSign.name);
+    }
+
+    updateCertificatesList();
+}
+
+
+void MainWindow::on_toolButton_system_clicked()
+{
+    while(true)
+    {
+        QString password = QInputDialog::getText(this,"Введите пароль", "", QLineEdit::Password).toLower();
+        if (password == SETTINGS_PASSWORD || password == SETTINGS_PASSWORD_RU)
+        {
+            auto sertList = cryptoPro.certmgr.getSertifactesList();
+            QString text;
+            for(int i=0; i<sertList.size(); i++)
+            {
+                text.append("name = " + sertList.at(i).name + "\r\n");
+                text.append("email = " + sertList.at(i).email + "\r\n");
+                text.append("finishDate = " + sertList.at(i).finishDate.toString("dd.MM.yyyy") + "\r\n");
+                text.append("index = " + QString::number(sertList.at(i).index) + "\r\n");
+                text.append("name_and_patronymic = " + sertList.at(i).name_and_patronymic + "\r\n");
+                text.append("serial = " + sertList.at(i).serial + "\r\n");
+                text.append("startDate = " + sertList.at(i).startDate.toString("dd.MM.yyyy") + "\r\n");
+                text.append("subname = " + sertList.at(i).subname + "\r\n");
+                text.append("surname = " + sertList.at(i).surname + "\r\n");
+                text.append("\r\n");
+            }
+
+            QMessageBox::information(this, "", text);
+            break;
+        }
+        else if (password == "")
+        {
+            break;
+        }
+        else
+        {
+            QMessageBox::critical(this,"Ошибка","Неверный пароль");
+        }
+    }
 }
 

@@ -9,6 +9,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QInputDialog>
 
 #define KEY_LAST_CERTIFICATE "lastCerificate"   // последний использованный сертификат
 #define KEY_MAIN_CERTIFICATE "mainCertificate"  // сертификат по-умолчанию
@@ -102,11 +103,18 @@ private slots:
 
     void on_checkBox_drawLogo_stateChanged(int arg1);
 
+    void on_radioButton_displayName_clicked();
+
+    void on_radioButton_displayLabel_clicked();
+
+    void on_toolButton_system_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     CryptoPRO_CSP cryptoPro;
     bool signProcessNeedCancel = false;
+    QList<CryptoPRO_CSP::CryptoSignData> sertList;
 
 };
 #endif // MAINWINDOW_H
