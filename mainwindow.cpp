@@ -619,6 +619,12 @@ void MainWindow::on_toolButton_searchCertificate_clicked()
 {
     DialogSearchSertificate dialog; // создаём диалог поиска сертификата
     dialog.setAllSertificatesList(cryptoPro.certmgr.getSertifactesList());  // задаём имеющиеся сертификаты
+
+#ifdef _WIN32
+    QFont font("Segoe UI", 10);
+    dialog.setFont(font);
+#endif
+
     dialog.exec();  //запускаем диалог и ждём выбора
     auto cert = dialog.getChosedSertificate();
     if(cert.serial != "")
